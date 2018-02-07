@@ -1,9 +1,10 @@
 const Discord = require('discord.js');
-const secret = require('./secret.json');
 const members = require('./members.js');
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
+const token = process.env.TOKEN || JSON.parse(fs.readFileSync('secret.json'), 'utf8').token;
 const PORT = process.env.PORT || 5000;
 const client = new Discord.Client({ fetchAllMembers: true, sync: true });
 const server = express();
@@ -34,7 +35,7 @@ client.on('guildMemberRemove', (member) => {
   members.write(member.guild);
 });
 
-client.login(process.env.TOKEN || secret.token);
+client.login(token);
 
 server
   .use(express.static(path.join(__dirname, 'public'), options))
