@@ -8,7 +8,7 @@ const token = process.env.TOKEN || JSON.parse(fs.readFileSync('secret.json'), 'u
 const PORT = process.env.PORT || 5000;
 const client = new Discord.Client({ fetchAllMembers: true, sync: true });
 const server = express();
-const allowedOrigin = 'https://ivalicealliance.net';
+const allowedOrigin = 'https://www.ivalicealliance.net';
 const redirectPage = 'https://github.com/ivalicealliance/construct8';
 const options = {
   dotfiles: 'ignore',
