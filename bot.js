@@ -31,6 +31,10 @@ client.on('guildMemberAdd', (member) => {
   members.write(member.guild);
 });
 
+client.on('guildMemberUpdate', (_, newMember) => {
+  members.write(newMember.guild);
+});
+
 client.on('guildMemberRemove', (member) => {
   members.write(member.guild);
 });
