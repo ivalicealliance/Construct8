@@ -9,6 +9,7 @@ function membersFrom(guild) {
         name,
         position: guildMember.highestRole.calculatedPosition,
         avatar: guildMember.user.avatarURL,
+        presence: guildMember.presence,
         joinedTimestamp: guildMember.joinedTimestamp,
       };
     })
