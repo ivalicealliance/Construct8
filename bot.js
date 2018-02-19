@@ -39,6 +39,10 @@ client.on('guildMemberRemove', (member) => {
   members.write(member.guild);
 });
 
+client.on('presenceUpdate', (_, newMember) => {
+  members.write(newMember.guild);
+});
+
 client.login(token);
 
 server
