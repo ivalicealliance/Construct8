@@ -1,5 +1,20 @@
 const fs = require('fs');
 
+function priorityFrom(status) {
+  switch (status) {
+    case 'online':
+      return 2;
+    case 'idle':
+      return 1;
+    case 'dnd':
+      return 0;
+    case 'offline':
+      return -1;
+    default:
+      return -2;
+  }
+}
+
 function membersFrom(guild) {
   return guild.members
     .filter(guildMember => guildMember.highestRole.calculatedPosition > 0)
@@ -15,8 +30,11 @@ function membersFrom(guild) {
     })
     .sort((lhs, rhs) => {
       const positionDescending = rhs.position - lhs.position;
+      const lhsPriority = priorityFrom(lhs.presence.status);
+      const rhsPriority = priorityFrom(rhs.presence.status);
+      const onlineDescending = rhsPriority - lhsPriority;
       const timestampAscending = lhs.joinedTimestamp - rhs.joinedTimestamp;
-      return positionDescending || timestampAscending;
+      return positionDescending || onlineDescending || timestampAscending;
     });
 }
 
