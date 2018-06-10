@@ -18,6 +18,10 @@
     "eslint-plugin-react": "^7.6.0",
     "prettier-eslint": "^8.8.1"
   },
+  "engines":  { 
+    "node": ">=9.4.0",
+    "npm": ">=5.6.0"
+  },
   "scripts": {
     "start": "node bot.js"
   }
