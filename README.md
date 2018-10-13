@@ -1,2 +1,2 @@
 # Construct8
-Discord bot that provides services for website integration.
+A Discord Cloud Function that will provide a guild's members list as JSON.
