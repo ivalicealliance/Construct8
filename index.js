@@ -9,6 +9,14 @@ const Discord = require('discord.js');
  * @param {!express:Response} res HTTP response context.
  */
 exports.getMembers = (req, res) => {
+  res.set('Access-Control-Allow-Origin', process.env.ORIGIN);
+  res.set('Access-Control-Allow-Methods', 'GET');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
+  res.set('Access-Control-Max-Age', '3600');
+  if (req.method === 'OPTIONS') {
+    res.status(204).send('');
+  }
+
   const client = new Discord.Client({ fetchAllMembers: true, sync: true });
   client.on('ready', () => {
     const guild = client.guilds.first();
