@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 function priorityFrom(status) {
   switch (status) {
     case 'online':
@@ -52,7 +50,7 @@ function rolesFrom(guild) {
     }, []);
 }
 
-function jsonFrom(guild) {
+exports.jsonFrom = function jsonFrom(guild) {
   const members = membersFrom(guild);
   const roles = rolesFrom(guild);
   const meta = {
@@ -67,14 +65,4 @@ function jsonFrom(guild) {
     roles,
   };
   return JSON.stringify(memberList, null, 2);
-}
-
-function writeMembers(json) {
-  fs.writeFile('public/members.json', json, (err) => {
-    if (err) throw err;
-  });
-}
-
-exports.write = function write(guild) {
-  writeMembers(jsonFrom(guild));
 };

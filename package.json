@@ -1,12 +1,11 @@
 {
   "name": "construct8",
-  "version": "0.1.0",
-  "description": "Discord Bot that will provide members list as JSON.",
-  "main": "bot.js",
+  "version": "2.0.0",
+  "description": "A Discord Cloud Function that will provide a guild's members list as JSON.",
+  "main": "index.js",
   "author": "balthier-ex",
   "dependencies": {
-    "discord.js": "^11.3.0",
-    "express": "^4.16.2"
+    "discord.js": "^11.4.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
@@ -21,8 +20,5 @@
   "engines":  { 
     "node": ">=9.4.0",
     "npm": ">=5.6.0"
-  },
-  "scripts": {
-    "start": "node bot.js"
   }
 }
