@@ -28,8 +28,8 @@ function cacheIsValid() {
     return false;
   }
 
-  const expiration = Date.now() + 5000;
-  return cachedResponse.lastModified <= expiration;
+  const expiration = cachedResponse.lastModified + 5000;
+  return expiration >= Date.now();
 }
 
 /**
