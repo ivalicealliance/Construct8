@@ -2,7 +2,7 @@ const token = process.env.TOKEN;
 const members = require('./members.js');
 const Discord = require('discord.js');
 
-let cachedJson = null;
+let cachedResponse = null;
 
 function setAccessControl(res) {
   res.set('Access-Control-Allow-Origin', process.env.ORIGIN);
@@ -16,7 +16,7 @@ function updateCacheAndSendResponse(res) {
   client.on('ready', () => {
     const guild = client.guilds.first();
     const json = members.jsonFrom(guild);
-    cachedJson = json;
+    cachedResponse = { lastModified: Date.now(), json };
     res.status(200).send(json);
     client.destroy();
   });
@@ -24,12 +24,12 @@ function updateCacheAndSendResponse(res) {
 }
 
 function cacheIsValid() {
-  if (cachedJson === null) {
+  if (cachedResponse === null) {
     return false;
   }
 
-  const expiration = Date() + 5000;
-  return cachedJson.meta.lastMofified <= expiration;
+  const expiration = Date.now() + 5000;
+  return cachedResponse.lastModified <= expiration;
 }
 
 /**
@@ -46,7 +46,7 @@ exports.getMembers = (req, res) => {
   }
 
   if (cacheIsValid()) {
-    res.status(200).send(cachedJson);
+    res.status(200).send(cachedResponse.json);
   } else {
     updateCacheAndSendResponse(res);
   }
