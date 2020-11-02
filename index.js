@@ -12,9 +12,9 @@ function setAccessControl(res) {
 }
 
 function updateCacheAndSendResponse(res) {
-  const client = new Discord.Client({ fetchAllMembers: true, sync: true });
+  const client = new Discord.Client({ presence: { activity: { name: 'Constructing', url: process.env.URL } } });
   client.on('ready', () => {
-    const guild = client.guilds.first();
+    const guild = client.guilds.cache.first();
     const json = members.jsonFrom(guild);
     cachedResponse = { lastModified: Date.now(), json };
     res.status(200).send(json);
@@ -33,7 +33,7 @@ function cacheIsValid() {
 }
 
 /**
- * Responds to any HTTP request with members a Discord Guild.
+ * Responds to any HTTP request with members and roles in a Discord Guild.
  *
  * @param {!express:Request} req HTTP request context.
  * @param {!express:Response} res HTTP response context.

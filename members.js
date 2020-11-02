@@ -14,13 +14,13 @@ function priorityFrom(status) {
 }
 
 function membersFrom(guild) {
-  return guild.members
-    .filter(guildMember => guildMember.highestRole.calculatedPosition > 0)
+  return guild.members.cache
+    .filter(guildMember => guildMember.roles.highest.position > 0)
     .map((guildMember) => {
       const name = guildMember.nickname || guildMember.displayName;
       return {
         name,
-        position: guildMember.highestRole.calculatedPosition,
+        position: guildMember.roles.highest.position,
         avatar: guildMember.user.avatarURL,
         presence: guildMember.presence,
         joinedTimestamp: guildMember.joinedTimestamp,
@@ -37,7 +37,7 @@ function membersFrom(guild) {
 }
 
 function rolesFrom(guild) {
-  return guild.roles
+  return guild.roles.cache
     .filter(role => role.position > 0)
     .sort((lhs, rhs) => rhs.position - lhs.position)
     .reduce((previous, current) => {
