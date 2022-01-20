@@ -39,6 +39,7 @@ function membersFrom(guild) {
 function rolesFrom(guild) {
   return guild.roles.cache
     .filter(role => role.position > 0)
+    .filter(role => role.members.size > 0)
     .sort((lhs, rhs) => rhs.position - lhs.position)
     .reduce((previous, current) => {
       const role = {
