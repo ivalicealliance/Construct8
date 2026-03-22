@@ -1,6 +1,10 @@
 const token = process.env.TOKEN;
 const members = require('./members.js');
-const Discord = require('discord.js');
+const {
+  ActivityType,
+  Client,
+  GatewayIntentBits,
+} = require('discord.js');
 
 const CACHE_TTL_MS = 5000;
 
@@ -22,23 +26,36 @@ function guildFrom(client) {
   return client.guilds.cache.first();
 }
 
-function cachedResponseFrom(client) {
-  const guild = guildFrom(client);
-  const json = members.jsonFrom(guild);
-  return { lastModified: Date.now(), json };
-}
-
 function fetchResponse() {
   if (!token) {
     return Promise.reject(new Error('TOKEN environment variable is required.'));
   }
 
-  const client = new Discord.Client({ presence: { activity: { name: 'Constructing', url: process.env.URL } } });
+  const client = new Client({
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMembers,
+      GatewayIntentBits.GuildPresences,
+    ],
+    presence: {
+      activities: [{
+        name: 'Constructing',
+        type: ActivityType.Playing,
+      }],
+      status: 'online',
+    },
+  });
 
   return new Promise((resolve, reject) => {
-    client.once('ready', () => {
+    client.once('ready', async () => {
       try {
-        resolve(cachedResponseFrom(client));
+        const guild = guildFrom(client);
+        await guild.roles.fetch();
+        await guild.members.fetch({ withPresences: true });
+        resolve({
+          lastModified: Date.now(),
+          json: members.jsonFrom(guild),
+        });
       } catch (error) {
         reject(error);
       } finally {
