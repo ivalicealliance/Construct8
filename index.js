@@ -80,6 +80,10 @@ function sendInternalError(res, error) {
   return res.status(500).send('Unable to fetch guild members.');
 }
 
+function sendJson(res, json) {
+  return res.type('application/json').status(200).send(json);
+}
+
 function updateCacheAndSendResponse(res) {
   if (pendingResponse === null) {
     pendingResponse = fetchResponse()
@@ -93,7 +97,7 @@ function updateCacheAndSendResponse(res) {
   }
 
   return pendingResponse
-    .then(response => res.status(200).send(response.json))
+    .then(response => sendJson(res, response.json))
     .catch(error => sendInternalError(res, error));
 }
 
@@ -120,7 +124,7 @@ exports.getMembers = (req, res) => {
   }
 
   if (cacheIsValid()) {
-    return res.status(200).send(cachedResponse.json);
+    return sendJson(res, cachedResponse.json);
   } else {
     return updateCacheAndSendResponse(res);
   }
