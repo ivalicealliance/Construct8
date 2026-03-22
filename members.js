@@ -13,16 +13,21 @@ function priorityFrom(status) {
   }
 }
 
+function presenceFrom(guildMember) {
+  return guildMember.presence || { status: 'offline' };
+}
+
 function membersFrom(guild) {
   return guild.members.cache
     .filter(guildMember => guildMember.roles.highest.position > 0)
     .map((guildMember) => {
       const name = guildMember.nickname || guildMember.displayName;
+      const presence = presenceFrom(guildMember);
       return {
         name,
         position: guildMember.roles.highest.position,
-        avatar: guildMember.user.avatarURL,
-        presence: guildMember.presence,
+        avatar: guildMember.user.avatarURL(),
+        presence,
         joinedTimestamp: guildMember.joinedTimestamp,
       };
     })
@@ -41,14 +46,10 @@ function rolesFrom(guild) {
     .filter(role => role.position > 0)
     .filter(role => role.members.size > 0)
     .sort((lhs, rhs) => rhs.position - lhs.position)
-    .reduce((previous, current) => {
-      const role = {
-        name: current.name,
-        position: current.position,
-      };
-      previous.push(role);
-      return previous;
-    }, []);
+    .map(role => ({
+      name: role.name,
+      position: role.position,
+    }));
 }
 
 exports.jsonFrom = function jsonFrom(guild) {
@@ -56,8 +57,8 @@ exports.jsonFrom = function jsonFrom(guild) {
   const roles = rolesFrom(guild);
   const meta = {
     name: guild.name,
-    membercount: Object.keys(members).length,
-    rolecount: Object.keys(roles).length,
+    membercount: members.length,
+    rolecount: roles.length,
     lastModified: Date.now(),
   };
   const memberList = {
