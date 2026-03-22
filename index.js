@@ -42,12 +42,12 @@ exports.getMembers = (req, res) => {
   setAccessControl(res);
 
   if (req.method === 'OPTIONS') {
-    res.status(204).send('');
+    return res.status(204).send('');
   }
 
   if (cacheIsValid()) {
-    res.status(200).send(cachedResponse.json);
+    return res.status(200).send(cachedResponse.json);
   } else {
-    updateCacheAndSendResponse(res);
+    return updateCacheAndSendResponse(res);
   }
 };
